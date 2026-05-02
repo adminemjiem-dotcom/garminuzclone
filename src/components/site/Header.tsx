@@ -108,6 +108,37 @@ export function Header() {
           </div>
         </div>
       )}
+      {searchOpen && (
+        <div className="fixed inset-0 z-[60] bg-background/95 backdrop-blur-sm flex items-start justify-center pt-24 px-4">
+          <button
+            type="button"
+            aria-label="Закрыть поиск"
+            onClick={() => setSearchOpen(false)}
+            className="absolute inset-0 -z-10"
+          />
+          <div className="w-full max-w-2xl">
+            <form onSubmit={submitSearch} className="flex items-center gap-2 border-b-2 border-foreground pb-2">
+              <Search className="w-5 h-5 text-muted-foreground" />
+              <input
+                autoFocus
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Поиск товаров Garmin…"
+                className="flex-1 bg-transparent outline-none text-lg placeholder:text-muted-foreground"
+              />
+              <button
+                type="button"
+                aria-label="Закрыть"
+                onClick={() => setSearchOpen(false)}
+                className="p-1 hover:bg-muted rounded-full"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </form>
+            <p className="text-xs text-muted-foreground mt-3">Нажмите Enter для поиска</p>
+          </div>
+        </div>
+      )}
     </header>
   );
 }
