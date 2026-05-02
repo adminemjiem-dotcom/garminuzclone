@@ -7,6 +7,7 @@ import { categories } from "@/lib/products";
 
 const searchSchema = z.object({
   category: z.string().optional(),
+  q: z.string().optional(),
 });
 
 export const Route = createFileRoute("/catalog")({
