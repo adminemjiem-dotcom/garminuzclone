@@ -1,5 +1,5 @@
-import { Link } from "@tanstack/react-router";
-import { Search, User, ShoppingCart, Menu, ChevronDown } from "lucide-react";
+import { Link, useNavigate } from "@tanstack/react-router";
+import { Search, ShoppingCart, Menu, ChevronDown, X } from "lucide-react";
 import { useState } from "react";
 import { useCart } from "@/lib/cart";
 
@@ -12,7 +12,18 @@ const nav = [
 
 export function Header() {
   const [open, setOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [query, setQuery] = useState("");
+  const navigate = useNavigate();
   const { count, setOpen: setCartOpen } = useCart();
+
+  const submitSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    const q = query.trim();
+    if (!q) return;
+    setSearchOpen(false);
+    navigate({ to: "/catalog", search: { q } as any });
+  };
   return (
     <header className="sticky top-0 z-50 bg-background/95 backdrop-blur border-b border-border">
       <div className="bg-secondary text-secondary-foreground text-xs">
