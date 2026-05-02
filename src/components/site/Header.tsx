@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { Search, User, ShoppingCart, Menu, ChevronDown } from "lucide-react";
 import { useState } from "react";
+import { useCart } from "@/lib/cart";
 
 const nav = [
   { label: "Каталог", to: "/catalog" },
@@ -11,6 +12,7 @@ const nav = [
 
 export function Header() {
   const [open, setOpen] = useState(false);
+  const { count, setOpen: setCartOpen } = useCart();
   return (
     <header className="sticky top-0 z-50 bg-background/95 backdrop-blur border-b border-border">
       <div className="bg-secondary text-secondary-foreground text-xs">
@@ -56,10 +58,14 @@ export function Header() {
           <button aria-label="Аккаунт" className="p-2 hover:bg-muted rounded-full transition hidden sm:block">
             <User className="w-5 h-5" />
           </button>
-          <button aria-label="Корзина" className="p-2 hover:bg-muted rounded-full transition relative">
+          <button
+            aria-label="Корзина"
+            onClick={() => setCartOpen(true)}
+            className="p-2 hover:bg-muted rounded-full transition relative"
+          >
             <ShoppingCart className="w-5 h-5" />
             <span className="absolute -top-0.5 -right-0.5 bg-accent text-accent-foreground text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
-              0
+              {count}
             </span>
           </button>
           <button
