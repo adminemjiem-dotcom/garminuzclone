@@ -68,7 +68,12 @@ function CatalogPage() {
             ))}
           </div>
         </div>
-        <ProductGrid category={active} />
+        {q && (
+          <div className="container-x -mt-4 text-sm text-muted-foreground">
+            Результаты поиска: <span className="text-foreground font-medium">«{q}»</span>
+          </div>
+        )}
+        <ProductGrid category={active} query={q} />
       </main>
       <Footer />
     </div>
