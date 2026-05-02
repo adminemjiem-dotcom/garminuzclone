@@ -25,7 +25,7 @@ function Index() {
       <main className="flex-1">
         <Hero />
         <FeatureBand />
-        <ProductGrid />
+        <ProductGrid featuredOnly title="Новые поступления" limit={8} />
         <Categories />
       </main>
       <Footer />

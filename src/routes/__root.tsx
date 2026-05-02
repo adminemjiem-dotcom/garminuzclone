@@ -32,14 +32,13 @@ export const Route = createRootRoute({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { title: "Garmin Uzbekistan — Официальный дистрибьютор" },
+      { name: "description", content: "Официальный дистрибьютор Garmin в Узбекистане. Смарт-часы, GPS навигаторы, велокомпьютеры, эхолоты с гарантией." },
+      { name: "author", content: "Garmin Uzbekistan" },
+      { property: "og:title", content: "Garmin Uzbekistan" },
+      { property: "og:description", content: "Официальный дистрибьютор Garmin в Узбекистане." },
       { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary" },
-      { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
@@ -58,7 +57,7 @@ export const Route = createRootRoute({
 
 function RootShell({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="ru">
       <head>
         <HeadContent />
       </head>

@@ -1,11 +1,12 @@
+import { Link } from "@tanstack/react-router";
 import cycling from "@/assets/cat-cycling.jpg";
 import outdoor from "@/assets/cat-outdoor.jpg";
 import swim from "@/assets/cat-swim.jpg";
 
 const cats = [
-  { title: "Outdoor", desc: "Покоряйте вершины", img: outdoor },
-  { title: "Велоспорт", desc: "Преодолевайте маршруты", img: cycling },
-  { title: "Плавание", desc: "Тренируйтесь в воде", img: swim },
+  { title: "Outdoor", desc: "Покоряйте вершины", img: outdoor, slug: "outdoor" },
+  { title: "Велоспорт", desc: "Преодолевайте маршруты", img: cycling, slug: "cycling" },
+  { title: "Рыбалка и вода", desc: "Тренируйтесь в воде", img: swim, slug: "marine" },
 ];
 
 export function Categories() {
@@ -20,9 +21,10 @@ export function Categories() {
         </p>
         <div className="grid md:grid-cols-3 gap-6">
           {cats.map((c) => (
-            <a
+            <Link
               key={c.title}
-              href="#"
+              to="/catalog"
+              search={{ category: c.slug }}
               className="group relative overflow-hidden h-[420px] block"
             >
               <img
@@ -39,7 +41,7 @@ export function Categories() {
                   Смотреть →
                 </span>
               </div>
-            </a>
+            </Link>
           ))}
         </div>
       </div>

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 import heroBg from "@/assets/hero-runner.jpg";
 import wForerunner from "@/assets/watch-forerunner.png";
 import wInstinct from "@/assets/watch-instinct.png";
@@ -12,24 +13,28 @@ const slides = [
     subtitle: "Спортивные часы для триатлона с GPS",
     img: wForerunner,
     bg: heroBg,
+    productId: "forerunner-970",
   },
   {
     title: "Instinct 3",
     subtitle: "Прочные смарт-часы с ярким AMOLED-дисплеем",
     img: wInstinct,
     bg: heroBg,
+    productId: "instinct-3-amoled",
   },
   {
     title: "Lily 2 Active",
     subtitle: "Стильные смарт-часы со встроенным GPS",
     img: wLily,
     bg: heroBg,
+    productId: "lily-2-active",
   },
   {
     title: "Vivoactive 6",
     subtitle: "Часы для здоровья и фитнеса с GPS",
     img: wVivoactive,
     bg: heroBg,
+    productId: "vivoactive-6",
   },
 ];
 
@@ -70,9 +75,13 @@ export function Hero() {
                 <p className="mt-5 text-lg md:text-xl text-background/85 max-w-md">
                   {sl.subtitle}
                 </p>
-                <button className="mt-8 inline-flex items-center px-8 py-3.5 bg-background text-foreground font-medium uppercase tracking-wider text-sm hover:bg-accent hover:text-accent-foreground transition-colors">
+                <Link
+                  to="/product/$id"
+                  params={{ id: sl.productId }}
+                  className="mt-8 inline-flex items-center px-8 py-3.5 bg-background text-foreground font-medium uppercase tracking-wider text-sm hover:bg-accent hover:text-accent-foreground transition-colors"
+                >
                   Узнать больше
-                </button>
+                </Link>
               </div>
               <div className="hidden md:block absolute right-0 lg:right-12 top-1/2 -translate-y-1/2 w-[55%] max-w-[720px]">
                 <img
