@@ -1,4 +1,7 @@
 import { Outlet, Link, createRootRoute, HeadContent, Scripts } from "@tanstack/react-router";
+import { CartProvider } from "@/lib/cart";
+import { CartDrawer } from "@/components/site/CartDrawer";
+import { Toaster } from "sonner";
 
 import appCss from "../styles.css?url";
 
@@ -29,18 +32,13 @@ export const Route = createRootRoute({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Garmin" },
-      { name: "description", content: "A web application that clones Garmin's e-commerce site, allowing users to browse and order products." },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Garmin" },
-      { property: "og:description", content: "A web application that clones Garmin's e-commerce site, allowing users to browse and order products." },
+      { title: "Garmin Uzbekistan — Официальный дистрибьютор" },
+      { name: "description", content: "Официальный дистрибьютор Garmin в Узбекистане. Смарт-часы, GPS навигаторы, велокомпьютеры, эхолоты с гарантией." },
+      { name: "author", content: "Garmin Uzbekistan" },
+      { property: "og:title", content: "Garmin Uzbekistan" },
+      { property: "og:description", content: "Официальный дистрибьютор Garmin в Узбекистане." },
       { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary" },
-      { name: "twitter:site", content: "@Lovable" },
-      { name: "twitter:title", content: "Garmin" },
-      { name: "twitter:description", content: "A web application that clones Garmin's e-commerce site, allowing users to browse and order products." },
-      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/toHlq3DeeUe5MhHhhsa8LIuHEBx1/social-images/social-1777713647135-images.webp" },
-      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/toHlq3DeeUe5MhHhhsa8LIuHEBx1/social-images/social-1777713647135-images.webp" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
@@ -59,7 +57,7 @@ export const Route = createRootRoute({
 
 function RootShell({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="ru">
       <head>
         <HeadContent />
       </head>
@@ -72,5 +70,11 @@ function RootShell({ children }: { children: React.ReactNode }) {
 }
 
 function RootComponent() {
-  return <Outlet />;
+  return (
+    <CartProvider>
+      <Outlet />
+      <CartDrawer />
+      <Toaster position="top-right" richColors closeButton />
+    </CartProvider>
+  );
 }
