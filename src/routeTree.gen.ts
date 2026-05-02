@@ -15,6 +15,7 @@ import { Route as GarminPayRouteImport } from './routes/garmin-pay'
 import { Route as CatalogRouteImport } from './routes/catalog'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ProductIdRouteImport } from './routes/product.$id'
 
 const SupportRoute = SupportRouteImport.update({
   id: '/support',
@@ -46,6 +47,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProductIdRoute = ProductIdRouteImport.update({
+  id: '/product/$id',
+  path: '/product/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -54,6 +60,7 @@ export interface FileRoutesByFullPath {
   '/garmin-pay': typeof GarminPayRoute
   '/maps': typeof MapsRoute
   '/support': typeof SupportRoute
+  '/product/$id': typeof ProductIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -62,6 +69,7 @@ export interface FileRoutesByTo {
   '/garmin-pay': typeof GarminPayRoute
   '/maps': typeof MapsRoute
   '/support': typeof SupportRoute
+  '/product/$id': typeof ProductIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -71,12 +79,27 @@ export interface FileRoutesById {
   '/garmin-pay': typeof GarminPayRoute
   '/maps': typeof MapsRoute
   '/support': typeof SupportRoute
+  '/product/$id': typeof ProductIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about' | '/catalog' | '/garmin-pay' | '/maps' | '/support'
+  fullPaths:
+    | '/'
+    | '/about'
+    | '/catalog'
+    | '/garmin-pay'
+    | '/maps'
+    | '/support'
+    | '/product/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/catalog' | '/garmin-pay' | '/maps' | '/support'
+  to:
+    | '/'
+    | '/about'
+    | '/catalog'
+    | '/garmin-pay'
+    | '/maps'
+    | '/support'
+    | '/product/$id'
   id:
     | '__root__'
     | '/'
@@ -85,6 +108,7 @@ export interface FileRouteTypes {
     | '/garmin-pay'
     | '/maps'
     | '/support'
+    | '/product/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -94,6 +118,7 @@ export interface RootRouteChildren {
   GarminPayRoute: typeof GarminPayRoute
   MapsRoute: typeof MapsRoute
   SupportRoute: typeof SupportRoute
+  ProductIdRoute: typeof ProductIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -140,6 +165,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/product/$id': {
+      id: '/product/$id'
+      path: '/product/$id'
+      fullPath: '/product/$id'
+      preLoaderRoute: typeof ProductIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -150,6 +182,7 @@ const rootRouteChildren: RootRouteChildren = {
   GarminPayRoute: GarminPayRoute,
   MapsRoute: MapsRoute,
   SupportRoute: SupportRoute,
+  ProductIdRoute: ProductIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
