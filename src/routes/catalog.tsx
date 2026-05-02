@@ -24,7 +24,7 @@ export const Route = createFileRoute("/catalog")({
 });
 
 function CatalogPage() {
-  const { category } = Route.useSearch();
+  const { category, q } = Route.useSearch();
   const active = category ?? "all";
   const current = categories.find((c) => c.slug === active);
 
