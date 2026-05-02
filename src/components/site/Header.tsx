@@ -63,11 +63,12 @@ export function Header() {
         </nav>
 
         <div className="flex items-center gap-1 sm:gap-3">
-          <button aria-label="Поиск" className="p-2 hover:bg-muted rounded-full transition">
+          <button
+            aria-label="Поиск"
+            onClick={() => setSearchOpen(true)}
+            className="p-2 hover:bg-muted rounded-full transition"
+          >
             <Search className="w-5 h-5" />
-          </button>
-          <button aria-label="Аккаунт" className="p-2 hover:bg-muted rounded-full transition hidden sm:block">
-            <User className="w-5 h-5" />
           </button>
           <button
             aria-label="Корзина"
