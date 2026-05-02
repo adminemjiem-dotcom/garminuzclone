@@ -55,26 +55,43 @@ export const sendOrder = createServerFn({ method: "POST" })
       `\n<b>Товары:</b>\n${lines}\n\n` +
       `<i>${new Date().toLocaleString("ru-RU", { timeZone: "Asia/Tashkent" })} (Tashkent)</i>`;
 
-    const res = await fetch(`${GATEWAY_URL}/sendMessage`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${LOVABLE_API_KEY}`,
-        "X-Connection-Api-Key": TELEGRAM_API_KEY,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        chat_id: TELEGRAM_CHAT_ID,
-        text,
-        parse_mode: "HTML",
-        disable_web_page_preview: true,
-      }),
+    const payload = JSON.stringify({
+      chat_id: TELEGRAM_CHAT_ID,
+      text,
+      parse_mode: "HTML",
+      disable_web_page_preview: true,
     });
 
-    const body = await res.json().catch(() => ({}));
-    if (!res.ok || !(body as any).ok) {
-      console.error("Telegram sendMessage failed", res.status, body);
-      throw new Error(`Не удалось отправить заказ (${res.status})`);
+    let lastStatus = 0;
+    let lastBody: any = null;
+    for (let attempt = 1; attempt <= 4; attempt++) {
+      const res = await fetch(`${GATEWAY_URL}/sendMessage`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${LOVABLE_API_KEY}`,
+          "X-Connection-Api-Key": TELEGRAM_API_KEY,
+          "Content-Type": "application/json",
+        },
+        body: payload,
+      });
+
+      lastStatus = res.status;
+      lastBody = await res.json().catch(() => ({}));
+
+      if (res.ok && (lastBody as any).ok) {
+        return { ok: true as const };
+      }
+
+      // Retry on transient upstream failures (502/503/504 or gateway upstream_request_failed)
+      const transient =
+        res.status >= 502 ||
+        (lastBody as any)?.type === "upstream_request_failed";
+      if (!transient) break;
+
+      console.warn(`Telegram sendMessage attempt ${attempt} failed`, res.status, lastBody);
+      await new Promise((r) => setTimeout(r, 400 * attempt));
     }
 
-    return { ok: true as const };
+    console.error("Telegram sendMessage failed after retries", lastStatus, lastBody);
+    throw new Error(`Не удалось отправить заказ (${lastStatus})`);
   });
