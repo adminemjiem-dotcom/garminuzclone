@@ -1,0 +1,42 @@
+{
+  "categories": [
+    { "slug": "smartwatches", "title": "Умные часы", "desc": "AMOLED, GPS, здоровье" },
+    { "slug": "running", "title": "Бег", "desc": "Forerunner — для каждого бегуна" },
+    { "slug": "outdoor", "title": "Outdoor", "desc": "Fenix, Instinct, GPSMAP" },
+    { "slug": "cycling", "title": "Велоспорт", "desc": "Edge компьютеры и Varia" },
+    { "slug": "fitness", "title": "Фитнес и стиль", "desc": "Lily, Vivoactive, Vivosmart" },
+    { "slug": "marine", "title": "Рыбалка и вода", "desc": "Эхолоты Striker и Descent" },
+    { "slug": "auto", "title": "Авто-навигация", "desc": "DriveSmart серия" },
+    { "slug": "golf", "title": "Гольф", "desc": "Approach часы" },
+    { "slug": "accessories", "title": "Аксессуары", "desc": "Датчики и ремешки" }
+  ],
+  "products": [
+    { "id": "fenix-8", "name": "Fenix 8 AMOLED 47mm", "tagline": "Премиум мультиспорт", "price": 14990000, "category": "outdoor", "img": "fenix-8", "featured": true, "description": "Флагманские мультиспорт часы с AMOLED-экраном, голосовыми командами, встроенным фонариком и точным GNSS." },
+    { "id": "epix-pro-gen2", "name": "Epix Pro (Gen 2) 51mm", "tagline": "AMOLED + фонарик", "price": 12490000, "category": "outdoor", "img": "epix-pro", "featured": false, "description": "Премиум часы Epix Pro с ярким AMOLED, продвинутыми тренировками и встроенным LED фонариком." },
+    { "id": "tactix-7", "name": "Tactix 7 AMOLED", "tagline": "Тактические", "price": 16990000, "category": "outdoor", "img": "tactix-7", "featured": false, "description": "Тактические часы со специальными военными функциями, ночным режимом и сверхпрочной конструкцией." },
+    { "id": "instinct-3-amoled", "name": "Instinct 3 AMOLED 50mm", "tagline": "Прочные с GPS", "price": 5290000, "category": "outdoor", "img": "watch-instinct", "featured": true, "description": "Прочные смарт-часы по стандарту MIL-STD-810, AMOLED дисплей, точный GPS и до 24 дней автономности." },
+    { "id": "gpsmap-67", "name": "GPSMAP 67", "tagline": "Туристический GPS", "price": 6490000, "category": "outdoor", "img": "gpsmap-67", "featured": false, "description": "Профессиональный туристический GPS с многодиапазонным приёмом и спутниковой связью." },
+
+    { "id": "forerunner-970", "name": "Forerunner 970", "tagline": "Триатлон GPS", "price": 8490000, "category": "running", "img": "watch-forerunner", "featured": true, "description": "Топовые часы для бега и триатлона с AMOLED, ECG, картами и продвинутой аналитикой." },
+    { "id": "forerunner-265", "name": "Forerunner 265", "tagline": "AMOLED для бегунов", "price": 5790000, "category": "running", "img": "forerunner-265", "featured": true, "description": "AMOLED дисплей, точный GNSS, готовность к гонке и индивидуальные планы тренировок." },
+    { "id": "forerunner-165", "name": "Forerunner 165", "tagline": "Старт в бег", "price": 3290000, "category": "running", "img": "forerunner-165", "featured": false, "description": "Лёгкие беговые часы с AMOLED дисплеем — идеальный старт для новичков." },
+
+    { "id": "venu-3", "name": "Venu 3", "tagline": "Здоровье и фитнес", "price": 5990000, "category": "smartwatches", "img": "venu-3", "featured": true, "description": "Стильные смарт-часы с AMOLED, голосовыми вызовами, отслеживанием сна и медитациями." },
+    { "id": "vivoactive-6", "name": "Vivoactive 6", "tagline": "Универсальные", "price": 3990000, "category": "smartwatches", "img": "watch-vivoactive", "featured": true, "description": "Универсальные часы для здоровья и фитнеса со встроенным GPS и более 80 спортивных профилей." },
+    { "id": "vivosmart-5", "name": "Vivosmart 5", "tagline": "Фитнес-браслет", "price": 1690000, "category": "fitness", "img": "vivosmart-5", "featured": false, "description": "Тонкий фитнес-браслет с пульсометром, SpO2 и мониторингом сна." },
+    { "id": "lily-2-active", "name": "Lily 2 Active", "tagline": "Стиль и GPS", "price": 2790000, "category": "fitness", "img": "watch-lily", "featured": false, "description": "Изящные смарт-часы с GPS, спортивными профилями и трекингом здоровья." },
+
+    { "id": "edge-1040", "name": "Edge 1040 Solar", "tagline": "Велонавигатор", "price": 7990000, "category": "cycling", "img": "edge-1040", "featured": true, "description": "Премиум велокомпьютер с солнечной зарядкой, многодиапазонным GNSS и точной навигацией." },
+    { "id": "edge-540", "name": "Edge 540", "tagline": "Тренировки", "price": 4490000, "category": "cycling", "img": "edge-540", "featured": false, "description": "Компактный велокомпьютер с продвинутыми тренировочными метриками и динамическими планами." },
+    { "id": "varia-rct715", "name": "Varia RCT715", "tagline": "Радар + камера", "price": 4290000, "category": "cycling", "img": "varia-rct715", "featured": false, "description": "Задний велосипедный радар с камерой и фонарём — фиксирует подъезжающий транспорт." },
+
+    { "id": "striker-7sv", "name": "Striker Vivid 7sv", "tagline": "Эхолот", "price": 5990000, "category": "marine", "img": "striker-7sv", "featured": false, "description": "Цветной эхолот с CHIRP-сонаром, ClearVü и SideVü для рыбалки." },
+    { "id": "descent-mk3i", "name": "Descent Mk3i 51mm", "tagline": "Дайв-компьютер", "price": 17990000, "category": "marine", "img": "descent-mk3", "featured": false, "description": "Премиум дайв-компьютер с воздушной интеграцией и AMOLED-дисплеем." },
+
+    { "id": "drivesmart-66", "name": "DriveSmart 66", "tagline": "Авто-навигатор", "price": 3490000, "category": "auto", "img": "drivesmart-66", "featured": false, "description": "Автомобильный навигатор с ярким 6\" дисплеем, голосовым управлением и BC 40 камерой заднего вида." },
+
+    { "id": "approach-s70", "name": "Approach S70 47mm", "tagline": "Гольф GPS", "price": 6790000, "category": "golf", "img": "approach-s70", "featured": false, "description": "Гольф часы с AMOLED, картами 43 000+ полей и Virtual Caddie." },
+
+    { "id": "hrm-pro-plus", "name": "HRM-Pro Plus", "tagline": "Пульсометр", "price": 1490000, "category": "accessories", "img": "hrm-pro", "featured": false, "description": "Нагрудный пульсометр премиум-класса с динамикой бега и поддержкой ANT+/BLE." }
+  ]
+}
