@@ -1,26 +1,34 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Header } from "@/components/site/Header";
+import { Footer } from "@/components/site/Footer";
+import { Hero } from "@/components/site/Hero";
+import { ProductGrid } from "@/components/site/ProductGrid";
+import { Categories } from "@/components/site/Categories";
+import { FeatureBand } from "@/components/site/FeatureBand";
 
 export const Route = createFileRoute("/")({
+  head: () => ({
+    meta: [
+      { title: "Garmin Uzbekistan — Умные часы, GPS навигаторы, велокомпьютеры" },
+      { name: "description", content: "Официальный дистрибьютор Garmin в Узбекистане. Смарт-часы Forerunner, Instinct, Vivoactive, Lily. Гарантия и сервис." },
+      { property: "og:title", content: "Garmin Uzbekistan" },
+      { property: "og:description", content: "Официальный дистрибьютор Garmin в Узбекистане." },
+    ],
+  }),
   component: Index,
 });
 
-// IMPORTANT: Replace this placeholder. For sites with multiple pages (About, Services, Contact, etc.),
-// create separate route files (about.tsx, services.tsx, contact.tsx) — don't put all pages in this file.
-function PlaceholderIndex() {
+function Index() {
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
+    <div className="min-h-screen flex flex-col">
+      <Header />
+      <main className="flex-1">
+        <Hero />
+        <FeatureBand />
+        <ProductGrid />
+        <Categories />
+      </main>
+      <Footer />
     </div>
   );
-}
-
-function Index() {
-  return <PlaceholderIndex />;
 }
