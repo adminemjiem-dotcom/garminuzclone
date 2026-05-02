@@ -7,6 +7,7 @@ import { categories } from "@/lib/products";
 
 const searchSchema = z.object({
   category: z.string().optional(),
+  q: z.string().optional(),
 });
 
 export const Route = createFileRoute("/catalog")({
@@ -23,7 +24,7 @@ export const Route = createFileRoute("/catalog")({
 });
 
 function CatalogPage() {
-  const { category } = Route.useSearch();
+  const { category, q } = Route.useSearch();
   const active = category ?? "all";
   const current = categories.find((c) => c.slug === active);
 
@@ -67,7 +68,12 @@ function CatalogPage() {
             ))}
           </div>
         </div>
-        <ProductGrid category={active} />
+        {q && (
+          <div className="container-x -mt-4 text-sm text-muted-foreground">
+            Результаты поиска: <span className="text-foreground font-medium">«{q}»</span>
+          </div>
+        )}
+        <ProductGrid category={active} query={q} />
       </main>
       <Footer />
     </div>

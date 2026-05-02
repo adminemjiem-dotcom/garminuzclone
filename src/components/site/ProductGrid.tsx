@@ -8,14 +8,24 @@ type Props = {
   featuredOnly?: boolean;
   title?: string;
   limit?: number;
+  query?: string;
 };
 
-export function ProductGrid({ category, featuredOnly, title, limit }: Props) {
+export function ProductGrid({ category, featuredOnly, title, limit, query }: Props) {
   const { add, setOpen } = useCart();
 
   let list: Product[] = products;
   if (category && category !== "all") list = list.filter((p) => p.category === category);
   if (featuredOnly) list = list.filter((p) => p.featured);
+  if (query && query.trim()) {
+    const q = query.trim().toLowerCase();
+    list = list.filter(
+      (p) =>
+        p.name.toLowerCase().includes(q) ||
+        p.tagline?.toLowerCase().includes(q) ||
+        p.category?.toLowerCase().includes(q)
+    );
+  }
   if (limit) list = list.slice(0, limit);
 
   return (

@@ -1,5 +1,5 @@
-import { Link } from "@tanstack/react-router";
-import { Search, User, ShoppingCart, Menu, ChevronDown } from "lucide-react";
+import { Link, useNavigate } from "@tanstack/react-router";
+import { Search, ShoppingCart, Menu, ChevronDown, X } from "lucide-react";
 import { useState } from "react";
 import { useCart } from "@/lib/cart";
 
@@ -12,7 +12,18 @@ const nav = [
 
 export function Header() {
   const [open, setOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [query, setQuery] = useState("");
+  const navigate = useNavigate();
   const { count, setOpen: setCartOpen } = useCart();
+
+  const submitSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    const q = query.trim();
+    if (!q) return;
+    setSearchOpen(false);
+    navigate({ to: "/catalog", search: { q } as any });
+  };
   return (
     <header className="sticky top-0 z-50 bg-background/95 backdrop-blur border-b border-border">
       <div className="bg-secondary text-secondary-foreground text-xs">
@@ -52,11 +63,12 @@ export function Header() {
         </nav>
 
         <div className="flex items-center gap-1 sm:gap-3">
-          <button aria-label="Поиск" className="p-2 hover:bg-muted rounded-full transition">
+          <button
+            aria-label="Поиск"
+            onClick={() => setSearchOpen(true)}
+            className="p-2 hover:bg-muted rounded-full transition"
+          >
             <Search className="w-5 h-5" />
-          </button>
-          <button aria-label="Аккаунт" className="p-2 hover:bg-muted rounded-full transition hidden sm:block">
-            <User className="w-5 h-5" />
           </button>
           <button
             aria-label="Корзина"
@@ -93,6 +105,37 @@ export function Header() {
             <Link to="/garmin-pay" className="py-2.5 text-sm font-medium uppercase tracking-wide" onClick={() => setOpen(false)}>
               Garmin Pay
             </Link>
+          </div>
+        </div>
+      )}
+      {searchOpen && (
+        <div className="fixed inset-0 z-[60] bg-background/95 backdrop-blur-sm flex items-start justify-center pt-24 px-4">
+          <button
+            type="button"
+            aria-label="Закрыть поиск"
+            onClick={() => setSearchOpen(false)}
+            className="absolute inset-0 -z-10"
+          />
+          <div className="w-full max-w-2xl">
+            <form onSubmit={submitSearch} className="flex items-center gap-2 border-b-2 border-foreground pb-2">
+              <Search className="w-5 h-5 text-muted-foreground" />
+              <input
+                autoFocus
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Поиск товаров Garmin…"
+                className="flex-1 bg-transparent outline-none text-lg placeholder:text-muted-foreground"
+              />
+              <button
+                type="button"
+                aria-label="Закрыть"
+                onClick={() => setSearchOpen(false)}
+                className="p-1 hover:bg-muted rounded-full"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </form>
+            <p className="text-xs text-muted-foreground mt-3">Нажмите Enter для поиска</p>
           </div>
         </div>
       )}
