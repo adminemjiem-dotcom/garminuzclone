@@ -1,40 +1,48 @@
 import { useEffect, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Link } from "@tanstack/react-router";
-import heroBg from "@/assets/hero-runner.jpg";
-import wForerunner from "@/assets/watch-forerunner.png";
-import wInstinct from "@/assets/watch-instinct.png";
-import wLily from "@/assets/watch-lily.png";
-import wVivoactive from "@/assets/watch-vivoactive.png";
+import banner570 from "@/assets/banners/sH7jI6PGyR.webp";
+import bannerLily from "@/assets/banners/ojGAVN8WBn.jpeg";
+import bannerInstinct from "@/assets/banners/m4mo215yov.webp";
+import bannerVivo from "@/assets/banners/BOgiKIwsdY.webp";
+import banner970 from "@/assets/banners/xRcMN6V2Bp.jpeg";
+import { getImage } from "@/lib/products";
 
 const slides = [
   {
-    title: "Forerunner 970",
-    subtitle: "Спортивные часы для триатлона с GPS",
-    img: wForerunner,
-    bg: heroBg,
-    productId: "forerunner-970",
-  },
-  {
-    title: "Instinct 3",
-    subtitle: "Прочные смарт-часы с ярким AMOLED-дисплеем",
-    img: wInstinct,
-    bg: heroBg,
-    productId: "instinct-3-amoled",
+    title: "Forerunner 570",
+    subtitle: "Умные часы для бега с GPS",
+    img: getImage("forerunner-570"),
+    bg: banner570,
+    productId: "forerunner-570",
   },
   {
     title: "Lily 2 Active",
-    subtitle: "Стильные смарт-часы со встроенным GPS",
-    img: wLily,
-    bg: heroBg,
+    subtitle: "Небольшие стильные смарт-часы со встроенным GPS",
+    img: getImage("lily-2-active"),
+    bg: bannerLily,
     productId: "lily-2-active",
   },
   {
-    title: "Vivoactive 6",
-    subtitle: "Часы для здоровья и фитнеса с GPS",
-    img: wVivoactive,
-    bg: heroBg,
+    title: "Instinct 3",
+    subtitle: "Прочные смарт-часы с GPS и ярким AMOLED-дисплеем",
+    img: getImage("instinct-3"),
+    bg: bannerInstinct,
+    productId: "instinct-3-amoled",
+  },
+  {
+    title: "vívoactive 6",
+    subtitle: "Умные часы для здоровья и фитнеса с GPS и ярким, цветным дисплеем",
+    img: getImage("vivoactive-6"),
+    bg: bannerVivo,
     productId: "vivoactive-6",
+  },
+  {
+    title: "Forerunner 970",
+    subtitle: "Спортивные часы для триатлона с GPS",
+    img: getImage("forerunner-970"),
+    bg: banner970,
+    productId: "forerunner-970",
   },
 ];
 
