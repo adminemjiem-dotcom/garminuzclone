@@ -31,13 +31,19 @@ export const sendOrder = createServerFn({ method: "POST" })
   .inputValidator((data: unknown) => orderSchema.parse(data))
   .handler(async ({ data }) => {
     const LOVABLE_API_KEY = process.env.LOVABLE_API_KEY;
-    if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
-
     const TELEGRAM_API_KEY = process.env.TELEGRAM_API_KEY;
-    if (!TELEGRAM_API_KEY) throw new Error("TELEGRAM_API_KEY is not configured");
-
     const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID;
-    if (!TELEGRAM_CHAT_ID) throw new Error("TELEGRAM_CHAT_ID is not configured");
+    const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
+
+    // Local / self-hosted fallback: if no Telegram credentials are configured,
+    // just log the order to the server console and return success so the site
+    // remains fully functional when running locally with `npm run dev`.
+    const hasGateway = LOVABLE_API_KEY && TELEGRAM_API_KEY && TELEGRAM_CHAT_ID;
+    const hasDirectBot = TELEGRAM_BOT_TOKEN && TELEGRAM_CHAT_ID;
+    if (!hasGateway && !hasDirectBot) {
+      console.log("[order] (no Telegram configured — logging only)\n", JSON.stringify(data, null, 2));
+      return { ok: true as const, mode: "log" as const };
+    }
 
     const lines = data.items
       .map(
