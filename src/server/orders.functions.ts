@@ -68,32 +68,25 @@ export const sendOrder = createServerFn({ method: "POST" })
       disable_web_page_preview: true,
     });
 
+    // Build target URL + headers depending on which credentials are present.
+    const url = hasGateway
+      ? `${GATEWAY_URL}/sendMessage`
+      : `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+    const headers: Record<string, string> = { "Content-Type": "application/json" };
+    if (hasGateway) {
+      headers["Authorization"] = `Bearer ${LOVABLE_API_KEY}`;
+      headers["X-Connection-Api-Key"] = TELEGRAM_API_KEY!;
+    }
+
     let lastStatus = 0;
     let lastBody: any = null;
     for (let attempt = 1; attempt <= 4; attempt++) {
-      const res = await fetch(`${GATEWAY_URL}/sendMessage`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${LOVABLE_API_KEY}`,
-          "X-Connection-Api-Key": TELEGRAM_API_KEY,
-          "Content-Type": "application/json",
-        },
-        body: payload,
-      });
-
+      const res = await fetch(url, { method: "POST", headers, body: payload });
       lastStatus = res.status;
       lastBody = await res.json().catch(() => ({}));
-
-      if (res.ok && (lastBody as any).ok) {
-        return { ok: true as const };
-      }
-
-      // Retry on transient upstream failures (502/503/504 or gateway upstream_request_failed)
-      const transient =
-        res.status >= 502 ||
-        (lastBody as any)?.type === "upstream_request_failed";
+      if (res.ok && (lastBody as any).ok) return { ok: true as const };
+      const transient = res.status >= 502 || (lastBody as any)?.type === "upstream_request_failed";
       if (!transient) break;
-
       console.warn(`Telegram sendMessage attempt ${attempt} failed`, res.status, lastBody);
       await new Promise((r) => setTimeout(r, 400 * attempt));
     }
