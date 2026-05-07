@@ -31,13 +31,19 @@ export const sendOrder = createServerFn({ method: "POST" })
   .inputValidator((data: unknown) => orderSchema.parse(data))
   .handler(async ({ data }) => {
     const LOVABLE_API_KEY = process.env.LOVABLE_API_KEY;
-    if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
-
     const TELEGRAM_API_KEY = process.env.TELEGRAM_API_KEY;
-    if (!TELEGRAM_API_KEY) throw new Error("TELEGRAM_API_KEY is not configured");
-
     const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID;
-    if (!TELEGRAM_CHAT_ID) throw new Error("TELEGRAM_CHAT_ID is not configured");
+    const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
+
+    // Local / self-hosted fallback: if no Telegram credentials are configured,
+    // just log the order to the server console and return success so the site
+    // remains fully functional when running locally with `npm run dev`.
+    const hasGateway = LOVABLE_API_KEY && TELEGRAM_API_KEY && TELEGRAM_CHAT_ID;
+    const hasDirectBot = TELEGRAM_BOT_TOKEN && TELEGRAM_CHAT_ID;
+    if (!hasGateway && !hasDirectBot) {
+      console.log("[order] (no Telegram configured — logging only)\n", JSON.stringify(data, null, 2));
+      return { ok: true as const, mode: "log" as const };
+    }
 
     const lines = data.items
       .map(
@@ -62,32 +68,25 @@ export const sendOrder = createServerFn({ method: "POST" })
       disable_web_page_preview: true,
     });
 
+    // Build target URL + headers depending on which credentials are present.
+    const url = hasGateway
+      ? `${GATEWAY_URL}/sendMessage`
+      : `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+    const headers: Record<string, string> = { "Content-Type": "application/json" };
+    if (hasGateway) {
+      headers["Authorization"] = `Bearer ${LOVABLE_API_KEY}`;
+      headers["X-Connection-Api-Key"] = TELEGRAM_API_KEY!;
+    }
+
     let lastStatus = 0;
     let lastBody: any = null;
     for (let attempt = 1; attempt <= 4; attempt++) {
-      const res = await fetch(`${GATEWAY_URL}/sendMessage`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${LOVABLE_API_KEY}`,
-          "X-Connection-Api-Key": TELEGRAM_API_KEY,
-          "Content-Type": "application/json",
-        },
-        body: payload,
-      });
-
+      const res = await fetch(url, { method: "POST", headers, body: payload });
       lastStatus = res.status;
       lastBody = await res.json().catch(() => ({}));
-
-      if (res.ok && (lastBody as any).ok) {
-        return { ok: true as const };
-      }
-
-      // Retry on transient upstream failures (502/503/504 or gateway upstream_request_failed)
-      const transient =
-        res.status >= 502 ||
-        (lastBody as any)?.type === "upstream_request_failed";
+      if (res.ok && (lastBody as any).ok) return { ok: true as const };
+      const transient = res.status >= 502 || (lastBody as any)?.type === "upstream_request_failed";
       if (!transient) break;
-
       console.warn(`Telegram sendMessage attempt ${attempt} failed`, res.status, lastBody);
       await new Promise((r) => setTimeout(r, 400 * attempt));
     }
