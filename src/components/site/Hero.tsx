@@ -91,13 +91,6 @@ export function Hero() {
                   Узнать больше
                 </Link>
               </div>
-              <div className="hidden md:block absolute right-0 lg:right-12 top-1/2 -translate-y-1/2 w-[55%] max-w-[720px]">
-                <img
-                  src={sl.img}
-                  alt={sl.title}
-                  className="w-full h-auto drop-shadow-2xl"
-                />
-              </div>
             </div>
           </div>
         ))}
