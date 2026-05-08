@@ -1,5 +1,7 @@
 import { Link } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
 import { Facebook, Instagram, Youtube, Send } from "lucide-react";
+import { fetchSiteSettings } from "@/lib/products";
 
 type Col = {
   title: string;
@@ -40,6 +42,8 @@ const cols: Col[] = [
 ];
 
 export function Footer() {
+  const { data: s } = useQuery({ queryKey: ["site-settings"], queryFn: fetchSiteSettings });
+
   return (
     <footer className="bg-foreground text-background mt-24">
       <div className="container-x py-16 grid grid-cols-2 md:grid-cols-4 gap-10">
@@ -49,21 +53,29 @@ export function Footer() {
             AUTHORISED DISTRIBUTOR
           </div>
           <p className="text-sm text-background/70 mt-6 leading-relaxed">
-            Официальный дистрибьютор Garmin в Узбекистане. Гарантия на всю продукцию.
+            {s?.footer_text || "Официальный дистрибьютор Garmin в Узбекистане. Гарантия на всю продукцию."}
           </p>
           <div className="flex gap-3 mt-6">
-            <a href="https://facebook.com" aria-label="Facebook" className="p-2 border border-background/20 rounded-full hover:bg-accent hover:border-accent transition">
-              <Facebook className="w-4 h-4" />
-            </a>
-            <a href="https://instagram.com" aria-label="Instagram" className="p-2 border border-background/20 rounded-full hover:bg-accent hover:border-accent transition">
-              <Instagram className="w-4 h-4" />
-            </a>
-            <a href="https://youtube.com" aria-label="YouTube" className="p-2 border border-background/20 rounded-full hover:bg-accent hover:border-accent transition">
-              <Youtube className="w-4 h-4" />
-            </a>
-            <a href="https://t.me/garmin_uz" aria-label="Telegram" className="p-2 border border-background/20 rounded-full hover:bg-accent hover:border-accent transition">
-              <Send className="w-4 h-4" />
-            </a>
+            {s?.facebook_url && (
+              <a href={s.facebook_url} aria-label="Facebook" className="p-2 border border-background/20 rounded-full hover:bg-accent hover:border-accent transition">
+                <Facebook className="w-4 h-4" />
+              </a>
+            )}
+            {s?.instagram_url && (
+              <a href={s.instagram_url} aria-label="Instagram" className="p-2 border border-background/20 rounded-full hover:bg-accent hover:border-accent transition">
+                <Instagram className="w-4 h-4" />
+              </a>
+            )}
+            {s?.youtube_url && (
+              <a href={s.youtube_url} aria-label="YouTube" className="p-2 border border-background/20 rounded-full hover:bg-accent hover:border-accent transition">
+                <Youtube className="w-4 h-4" />
+              </a>
+            )}
+            {s?.telegram_url && (
+              <a href={s.telegram_url} aria-label="Telegram" className="p-2 border border-background/20 rounded-full hover:bg-accent hover:border-accent transition">
+                <Send className="w-4 h-4" />
+              </a>
+            )}
           </div>
         </div>
         {cols.map((c) => (
@@ -89,8 +101,8 @@ export function Footer() {
         <div className="container-x py-6 flex flex-col sm:flex-row gap-2 justify-between text-xs text-background/50">
           <div>© {new Date().getFullYear()} Garmin Uzbekistan. Все права защищены.</div>
           <div className="flex gap-6">
-            <Link to="/about">Политика конфиденциальности</Link>
-            <Link to="/about">Условия использования</Link>
+            {s?.phone && <span>{s.phone}</span>}
+            {s?.email && <span>{s.email}</span>}
           </div>
         </div>
       </div>

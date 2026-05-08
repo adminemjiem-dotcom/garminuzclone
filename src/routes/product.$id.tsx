@@ -1,58 +1,56 @@
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { ProductGrid } from "@/components/site/ProductGrid";
-import { getProduct, getCategory, getImage, formatPrice } from "@/lib/products";
+import { fetchProduct, fetchCategories, resolveImage, formatPrice } from "@/lib/products";
 import { useCart } from "@/lib/cart";
 import { toast } from "sonner";
 import { Check, Truck, ShieldCheck, ArrowLeft } from "lucide-react";
 
 export const Route = createFileRoute("/product/$id")({
-  loader: ({ params }) => {
-    const product = getProduct(params.id);
-    if (!product) throw notFound();
-    return { product };
-  },
-  head: ({ loaderData }) => {
-    const p = loaderData?.product;
-    if (!p) return { meta: [{ title: "Продукт не найден" }] };
-    return {
-      meta: [
-        { title: `${p.name} — Garmin Uzbekistan` },
-        { name: "description", content: p.description },
-        { property: "og:title", content: p.name },
-        { property: "og:description", content: p.description },
-      ],
-    };
-  },
+  head: ({ params }) => ({
+    meta: [
+      { title: `Товар ${params.id} — Garmin Uzbekistan` },
+    ],
+  }),
   component: ProductPage,
-  notFoundComponent: () => (
-    <div className="min-h-screen flex flex-col">
-      <Header />
-      <div className="flex-1 container-x py-24 text-center">
-        <h1 className="font-display text-4xl font-bold">Товар не найден</h1>
-        <Link to="/catalog" className="mt-6 inline-block text-accent hover:underline">← В каталог</Link>
-      </div>
-      <Footer />
-    </div>
-  ),
-  errorComponent: ({ error }) => (
-    <div className="min-h-screen flex flex-col">
-      <Header />
-      <div className="flex-1 container-x py-24 text-center">
-        <h1 className="font-display text-2xl font-bold">Ошибка загрузки</h1>
-        <p className="mt-2 text-muted-foreground">{error.message}</p>
-      </div>
-      <Footer />
-    </div>
-  ),
 });
 
 function ProductPage() {
-  const { product } = Route.useLoaderData();
+  const { id } = Route.useParams();
   const { add, setOpen } = useCart();
-  const img = getImage(product.img);
-  const cat = getCategory(product.category);
+  const { data: product, isLoading } = useQuery({
+    queryKey: ["product", id],
+    queryFn: () => fetchProduct(id),
+  });
+  const { data: categories = [] } = useQuery({ queryKey: ["categories"], queryFn: fetchCategories });
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex flex-col">
+        <Header />
+        <div className="flex-1 container-x py-24 text-center text-muted-foreground">Загрузка…</div>
+        <Footer />
+      </div>
+    );
+  }
+
+  if (!product) {
+    return (
+      <div className="min-h-screen flex flex-col">
+        <Header />
+        <div className="flex-1 container-x py-24 text-center">
+          <h1 className="font-display text-4xl font-bold">Товар не найден</h1>
+          <Link to="/catalog" className="mt-6 inline-block text-accent hover:underline">← В каталог</Link>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
+
+  const img = resolveImage(product.image_path);
+  const cat = categories.find((c) => c.slug === product.category);
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -120,7 +118,9 @@ function ProductPage() {
           </div>
         </div>
 
-        <ProductGrid category={product.category} title="Похожие товары" />
+        {product.category && (
+          <ProductGrid category={product.category} title="Похожие товары" />
+        )}
       </main>
       <Footer />
     </div>
