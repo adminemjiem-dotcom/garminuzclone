@@ -14,16 +14,285 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      banners: {
+        Row: {
+          active: boolean
+          created_at: string
+          id: string
+          image_path: string
+          link_product_id: string | null
+          sort: number
+          subtitle: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          id?: string
+          image_path: string
+          link_product_id?: string | null
+          sort?: number
+          subtitle?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          id?: string
+          image_path?: string
+          link_product_id?: string | null
+          sort?: number
+          subtitle?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "banners_link_product_id_fkey"
+            columns: ["link_product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      branches: {
+        Row: {
+          address: string
+          created_at: string
+          hours: string | null
+          id: string
+          map_url: string | null
+          name: string
+          phone: string | null
+          sort: number
+          updated_at: string
+        }
+        Insert: {
+          address?: string
+          created_at?: string
+          hours?: string | null
+          id?: string
+          map_url?: string | null
+          name: string
+          phone?: string | null
+          sort?: number
+          updated_at?: string
+        }
+        Update: {
+          address?: string
+          created_at?: string
+          hours?: string | null
+          id?: string
+          map_url?: string | null
+          name?: string
+          phone?: string | null
+          sort?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      categories: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          slug: string
+          sort: number
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          slug: string
+          sort?: number
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          slug?: string
+          sort?: number
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      products: {
+        Row: {
+          category: string | null
+          created_at: string
+          description: string | null
+          featured: boolean
+          id: string
+          image_path: string | null
+          name: string
+          price: number
+          sort: number
+          tagline: string | null
+          updated_at: string
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          featured?: boolean
+          id: string
+          image_path?: string | null
+          name: string
+          price?: number
+          sort?: number
+          tagline?: string | null
+          updated_at?: string
+        }
+        Update: {
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          featured?: boolean
+          id?: string
+          image_path?: string | null
+          name?: string
+          price?: number
+          sort?: number
+          tagline?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "products_category_fkey"
+            columns: ["category"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["slug"]
+          },
+        ]
+      }
+      site_settings: {
+        Row: {
+          address: string | null
+          email: string | null
+          facebook_url: string | null
+          footer_text: string | null
+          id: number
+          instagram_url: string | null
+          phone: string | null
+          telegram_bot_token: string | null
+          telegram_chat_id: string | null
+          telegram_url: string | null
+          updated_at: string
+          youtube_url: string | null
+        }
+        Insert: {
+          address?: string | null
+          email?: string | null
+          facebook_url?: string | null
+          footer_text?: string | null
+          id?: number
+          instagram_url?: string | null
+          phone?: string | null
+          telegram_bot_token?: string | null
+          telegram_chat_id?: string | null
+          telegram_url?: string | null
+          updated_at?: string
+          youtube_url?: string | null
+        }
+        Update: {
+          address?: string | null
+          email?: string | null
+          facebook_url?: string | null
+          footer_text?: string | null
+          id?: number
+          instagram_url?: string | null
+          phone?: string | null
+          telegram_bot_token?: string | null
+          telegram_chat_id?: string | null
+          telegram_url?: string | null
+          updated_at?: string
+          youtube_url?: string | null
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
-      [_ in never]: never
+      site_settings_public: {
+        Row: {
+          address: string | null
+          email: string | null
+          facebook_url: string | null
+          footer_text: string | null
+          id: number | null
+          instagram_url: string | null
+          phone: string | null
+          telegram_url: string | null
+          updated_at: string | null
+          youtube_url: string | null
+        }
+        Insert: {
+          address?: string | null
+          email?: string | null
+          facebook_url?: string | null
+          footer_text?: string | null
+          id?: number | null
+          instagram_url?: string | null
+          phone?: string | null
+          telegram_url?: string | null
+          updated_at?: string | null
+          youtube_url?: string | null
+        }
+        Update: {
+          address?: string | null
+          email?: string | null
+          facebook_url?: string | null
+          footer_text?: string | null
+          id?: number | null
+          instagram_url?: string | null
+          phone?: string | null
+          telegram_url?: string | null
+          updated_at?: string | null
+          youtube_url?: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +419,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "user"],
+    },
   },
 } as const
