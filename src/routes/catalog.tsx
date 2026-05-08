@@ -1,9 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { z } from "zod";
+import { useQuery } from "@tanstack/react-query";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { ProductGrid } from "@/components/site/ProductGrid";
-import { categories } from "@/lib/products";
+import { fetchCategories } from "@/lib/products";
 
 const searchSchema = z.object({
   category: z.string().optional(),
@@ -26,6 +27,7 @@ export const Route = createFileRoute("/catalog")({
 function CatalogPage() {
   const { category, q } = Route.useSearch();
   const active = category ?? "all";
+  const { data: categories = [] } = useQuery({ queryKey: ["categories"], queryFn: fetchCategories });
   const current = categories.find((c) => c.slug === active);
 
   return (
@@ -37,7 +39,7 @@ function CatalogPage() {
             {current?.title ?? "Каталог"}
           </h1>
           <p className="mt-4 text-muted-foreground max-w-2xl">
-            {current?.desc ?? "Откройте полный ассортимент устройств Garmin — от часов для бега до многоборных премиум-моделей."}
+            {current?.description ?? "Откройте полный ассортимент устройств Garmin — от часов для бега до многоборных премиум-моделей."}
           </p>
 
           <div className="mt-8 flex flex-wrap gap-2">

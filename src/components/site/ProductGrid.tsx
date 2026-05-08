@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
-import { products, getImage, formatPrice, type Product } from "@/lib/products";
+import { useQuery } from "@tanstack/react-query";
+import { fetchProducts, resolveImage, formatPrice, type Product } from "@/lib/products";
 import { useCart } from "@/lib/cart";
 import { toast } from "sonner";
 
@@ -13,6 +14,10 @@ type Props = {
 
 export function ProductGrid({ category, featuredOnly, title, limit, query }: Props) {
   const { add, setOpen } = useCart();
+  const { data: products = [], isLoading } = useQuery({
+    queryKey: ["products"],
+    queryFn: fetchProducts,
+  });
 
   let list: Product[] = products;
   if (category && category !== "all") list = list.filter((p) => p.category === category);
@@ -23,7 +28,7 @@ export function ProductGrid({ category, featuredOnly, title, limit, query }: Pro
       (p) =>
         p.name.toLowerCase().includes(q) ||
         p.tagline?.toLowerCase().includes(q) ||
-        p.category?.toLowerCase().includes(q)
+        p.category?.toLowerCase().includes(q),
     );
   }
   if (limit) list = list.slice(0, limit);
@@ -40,12 +45,14 @@ export function ProductGrid({ category, featuredOnly, title, limit, query }: Pro
         </div>
       )}
       <div className="container-x">
-        {list.length === 0 ? (
+        {isLoading ? (
+          <p className="text-center text-muted-foreground py-20">Загрузка…</p>
+        ) : list.length === 0 ? (
           <p className="text-center text-muted-foreground py-20">В этой категории пока нет товаров.</p>
         ) : (
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
             {list.map((p) => {
-              const img = getImage(p.img);
+              const img = resolveImage(p.image_path);
               return (
                 <div
                   key={p.id}
