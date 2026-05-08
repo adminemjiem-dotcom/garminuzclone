@@ -1,9 +1,14 @@
 import { Outlet, Link, createRootRoute, HeadContent, Scripts } from "@tanstack/react-router";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { CartProvider } from "@/lib/cart";
 import { CartDrawer } from "@/components/site/CartDrawer";
 import { Toaster } from "sonner";
 
 import appCss from "../styles.css?url";
+
+const queryClient = new QueryClient({
+  defaultOptions: { queries: { staleTime: 60_000, refetchOnWindowFocus: false } },
+});
 
 function NotFoundComponent() {
   return (
@@ -75,10 +80,12 @@ function RootShell({ children }: { children: React.ReactNode }) {
 
 function RootComponent() {
   return (
-    <CartProvider>
-      <Outlet />
-      <CartDrawer />
-      <Toaster position="top-right" richColors closeButton />
-    </CartProvider>
+    <QueryClientProvider client={queryClient}>
+      <CartProvider>
+        <Outlet />
+        <CartDrawer />
+        <Toaster position="top-right" richColors closeButton />
+      </CartProvider>
+    </QueryClientProvider>
   );
 }
