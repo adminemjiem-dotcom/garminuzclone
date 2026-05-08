@@ -120,7 +120,9 @@ export async function fetchCategories(): Promise<Category[]> {
     .select("slug,title,description,sort")
     .order("sort");
   if (error) throw error;
-  return data ?? [];
+  return (data ?? []).map((c) => ({
+    slug: c.slug, title: c.title, description: c.description ?? "", sort: c.sort,
+  }));
 }
 
 export async function fetchProducts(): Promise<Product[]> {
@@ -129,7 +131,15 @@ export async function fetchProducts(): Promise<Product[]> {
     .select("id,name,tagline,price,category,image_path,featured,description,sort")
     .order("sort");
   if (error) throw error;
-  return (data ?? []).map((p) => ({ ...p, price: Number(p.price) })) as Product[];
+  return (data ?? []).map(normalizeProduct);
+}
+
+function normalizeProduct(p: any): Product {
+  return {
+    id: p.id, name: p.name, tagline: p.tagline ?? "", price: Number(p.price),
+    category: p.category, image_path: p.image_path ?? "",
+    featured: !!p.featured, description: p.description ?? "", sort: p.sort ?? 0,
+  };
 }
 
 export async function fetchProduct(id: string): Promise<Product | null> {
@@ -139,7 +149,7 @@ export async function fetchProduct(id: string): Promise<Product | null> {
     .eq("id", id)
     .maybeSingle();
   if (error) throw error;
-  return data ? ({ ...data, price: Number(data.price) } as Product) : null;
+  return data ? normalizeProduct(data) : null;
 }
 
 export async function fetchBanners(): Promise<Banner[]> {
@@ -149,7 +159,10 @@ export async function fetchBanners(): Promise<Banner[]> {
     .eq("active", true)
     .order("sort");
   if (error) throw error;
-  return data ?? [];
+  return (data ?? []).map((b) => ({
+    id: b.id, title: b.title, subtitle: b.subtitle ?? "", image_path: b.image_path,
+    link_product_id: b.link_product_id, sort: b.sort, active: b.active,
+  }));
 }
 
 export async function fetchBranches(): Promise<Branch[]> {
@@ -158,7 +171,10 @@ export async function fetchBranches(): Promise<Branch[]> {
     .select("id,name,address,phone,hours,map_url,sort")
     .order("sort");
   if (error) throw error;
-  return data ?? [];
+  return (data ?? []).map((b) => ({
+    id: b.id, name: b.name, address: b.address ?? "", phone: b.phone ?? "",
+    hours: b.hours ?? "", map_url: b.map_url ?? "", sort: b.sort,
+  }));
 }
 
 export async function fetchSiteSettings(): Promise<SiteSettings> {
