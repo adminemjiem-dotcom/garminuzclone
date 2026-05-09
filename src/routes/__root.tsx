@@ -46,8 +46,8 @@ export const Route = createRootRoute({
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: "Garmin Uzbekistan — Официальный дистрибьютор" },
       { name: "twitter:description", content: "Официальный дистрибьютор Garmin в Узбекистане. Смарт-часы, GPS навигаторы, велокомпьютеры, эхолоты с гарантией." },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/b5c0b71d-f66e-4b19-8fe6-cb525fc00a9d/id-preview-1a8a3776--78263aec-efe5-4cc9-b3fd-70872ced5321.lovable.app-1778052512370.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/b5c0b71d-f66e-4b19-8fe6-cb525fc00a9d/id-preview-1a8a3776--78263aec-efe5-4cc9-b3fd-70872ced5321.lovable.app-1778052512370.png" },
+      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/toHlq3DeeUe5MhHhhsa8LIuHEBx1/social-images/social-1778307372119-Screenshot_2026-05-09_111539.webp" },
+      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/toHlq3DeeUe5MhHhhsa8LIuHEBx1/social-images/social-1778307372119-Screenshot_2026-05-09_111539.webp" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
