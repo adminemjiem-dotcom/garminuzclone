@@ -401,7 +401,7 @@ function BannersAdmin() {
 }
 
 // ---------- Branches ----------
-type BranchRow = { id?: string; name: string; address: string | null; phone: string | null; hours: string | null; map_url: string | null; sort: number };
+type BranchRow = { id?: string; name: string; address: string; phone: string | null; hours: string | null; map_url: string | null; sort: number };
 
 function BranchesAdmin() {
   const qc = useQueryClient();
