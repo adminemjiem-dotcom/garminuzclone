@@ -1,5 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
+import { supabaseAdmin } from "@/integrations/supabase/client.server";
 
 const GATEWAY_URL = "https://connector-gateway.lovable.dev/telegram";
 
@@ -32,8 +33,25 @@ export const sendOrder = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     const LOVABLE_API_KEY = process.env.LOVABLE_API_KEY;
     const TELEGRAM_API_KEY = process.env.TELEGRAM_API_KEY;
-    const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID;
-    const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
+
+    // Pull Telegram credentials from site_settings (managed via admin panel),
+    // falling back to env vars for self-hosted setups.
+    let dbBotToken = "";
+    let dbChatId = "";
+    try {
+      const { data: settings } = await supabaseAdmin
+        .from("site_settings")
+        .select("telegram_bot_token, telegram_chat_id")
+        .eq("id", 1)
+        .maybeSingle();
+      dbBotToken = settings?.telegram_bot_token?.trim() ?? "";
+      dbChatId = settings?.telegram_chat_id?.trim() ?? "";
+    } catch (e) {
+      console.warn("[order] failed to read site_settings", e);
+    }
+
+    const TELEGRAM_BOT_TOKEN = dbBotToken || process.env.TELEGRAM_BOT_TOKEN || "";
+    const TELEGRAM_CHAT_ID = dbChatId || process.env.TELEGRAM_CHAT_ID || "";
 
     // Local / self-hosted fallback: if no Telegram credentials are configured,
     // just log the order to the server console and return success so the site

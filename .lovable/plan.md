@@ -1,49 +1,40 @@
-## Goal
+## 1. Fix BranchRow TypeScript error in `src/routes/admin.tsx`
 
-Replace the AI-generated product/banner images currently used in the project with the real product photography hosted on garmin.com.uz, so the catalog visually matches the official local distributor.
+The local `BranchRow` type does not line up with the generated Supabase `branches` row type — in the DB schema `address` is `text NOT NULL` (default `''`), and `name`/`sort` are non-null too, so passing a row typed with nullable fields into `.upsert(b)` fails type-checking.
 
-## Legal note
+Fix: align `BranchRow` with the actual schema.
 
-garmin.com.uz is the official Garmin distributor in Uzbekistan and uses Garmin's official press imagery. Since this project positions itself as the same distributor's storefront, reusing those product shots is appropriate. We'll download them locally (rather than hotlinking) so the site doesn't break if the source CDN changes.
+```ts
+type BranchRow = {
+  id?: string;
+  name: string;
+  address: string;          // not nullable
+  phone: string | null;
+  hours: string | null;
+  map_url: string | null;
+  sort: number;
+};
+```
 
-## Approach
+No UI changes — the form already coerces empty strings (`?? ""`) for the optional fields, so behavior is unchanged.
 
-1. **Map our catalog → real source images.** For each product in `src/data/products.json`, find the matching product page on garmin.com.uz and grab its hero image URL from `https://garmin.com.uz/uploads/products/*.{png,webp,jpeg}`. Examples already discovered from the homepage:
-   - fēnix 8 47mm Solar → `IGO2OfrN3u.png`
-   - Enduro 3 → `BjDij0I0Oh.png`
-   - Vivoactive 6 → `3a339cpywD.jpeg`
-   - Forerunner 970 → `WfA7TK7YDE.webp`
-   - Forerunner 570 → `OnHqFm6SCq.webp`
-   - tactix 8 Solar Elite → `ColkYiJJBw.webp`
-   - fēnix E → `kxYcVvGPRT.png`
-   
-   For products we have but aren't on the homepage carousel (Edge 1040/540, Venu 3, Instinct, Lily, Vivosmart 5, HRM-Pro, Varia, Striker, DriveSmart, GPSMAP 67, Approach S70, Descent Mk3, Tactix 7), I'll fetch each product's page (or the category listing) and pull the hero image the same way.
+## 2. Read Telegram credentials from `site_settings` in `src/server/orders.functions.ts`
 
-2. **Download images** with `curl` into `src/assets/products/` using the existing slug-based filenames (e.g. `fenix-8.webp`, `forerunner-970.webp`). Keep original format (webp/png/jpeg) — Vite handles all three. Overwrite the AI-generated PNGs.
+Today the handler reads `TELEGRAM_BOT_TOKEN` / `TELEGRAM_CHAT_ID` (and the Lovable gateway combo) from `process.env`. Switch the primary source to the `site_settings` row managed in the admin panel, and keep env vars only as a self-hosting fallback.
 
-3. **Update `src/lib/products.ts`** import map:
-   - Change extensions where needed (e.g. `forerunner-265.png` → `forerunner-265.webp`).
-   - Add a few new entries if I swap product IDs to better match what's actually sold (e.g. add `fenix-e`, `enduro-3`, `vivoactive-6`, `forerunner-970`, `forerunner-570`, `tactix-8`).
+Steps inside the handler:
 
-4. **Refresh `src/data/products.json`** so prices and names align with garmin.com.uz reality:
-   - Convert the USD prices shown on garmin.com.uz to UZS (~12 600 UZS / USD, rounded to nearest 10 000) for consistency with the existing `сум` formatting.
-   - Update names to match official spelling (fēnix, vívoactive, tactix).
-   - Keep the same category slugs and `featured` flags.
+1. Import the admin client: `import { supabaseAdmin } from "@/integrations/supabase/client.server";`
+2. Fetch settings: `supabaseAdmin.from("site_settings").select("telegram_bot_token, telegram_chat_id").eq("id", 1).maybeSingle()`.
+3. Resolution order for credentials:
+   - `bot_token` = `site_settings.telegram_bot_token` || `process.env.TELEGRAM_BOT_TOKEN`
+   - `chat_id`   = `site_settings.telegram_chat_id`   || `process.env.TELEGRAM_CHAT_ID`
+   - Lovable gateway path (`LOVABLE_API_KEY` + `TELEGRAM_API_KEY` + chat id) stays as a secondary mode.
+4. If neither a direct bot token + chat id nor the gateway combo is available, keep the existing "log only" fallback so local dev still works.
+5. Build URL/headers exactly as today based on which mode resolved.
 
-5. **Banner/Hero images.** Also pull the 5 slider banners (`sH7jI6PGyR.webp`, `ojGAVN8WBn.jpeg`, `m4mo215yov.webp`, `BOgiKIwsdY.webp`, `xRcMN6V2Bp.jpeg`) into `src/assets/banners/` and wire one into `Hero.tsx` as the background/feature image (replacing the current AI hero asset).
+No schema or RLS changes are needed — `site_settings` already exists, the columns are present, and `supabaseAdmin` bypasses RLS so the server function can read the secrets even though anon users cannot.
 
-6. **Verify** by viewing the home and catalog pages — every card should show a real product render with no broken images.
-
-## Files touched
-
-- `src/assets/products/*` — overwrite ~16 files, add a few new ones
-- `src/assets/banners/*` — new directory with 3-5 banner images
-- `src/lib/products.ts` — adjust image imports & map
-- `src/data/products.json` — update names/prices/IDs to match official catalog
-- `src/components/site/Hero.tsx` — swap hero image to the real banner
-- (possibly) `src/routes/product.$id.tsx` — no logic change, just benefits from new images
-
-## Out of scope
-
-- No changes to cart, checkout, Telegram order flow, or routing.
-- Not adding a real CMS — JSON stays the source of truth as agreed.
+### Files touched
+- `src/routes/admin.tsx` — adjust `BranchRow` type only.
+- `src/server/orders.functions.ts` — add settings lookup + new credential resolution.
