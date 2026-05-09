@@ -42,10 +42,10 @@ export function Hero() {
             <img
               src={resolveImage(sl.image_path)}
               alt=""
-              className="absolute inset-0 w-full h-full object-cover"
+              className="absolute inset-0 w-full h-full object-contain"
               fetchPriority={idx === 0 ? "high" : "auto"}
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-foreground/80 via-foreground/40 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-r from-foreground/80 via-foreground/20 to-transparent pointer-events-none" />
             <div className="container-x relative h-full flex items-center">
               <div className="max-w-xl text-background z-10">
                 <h1 className="font-display text-5xl md:text-7xl font-bold leading-none">
