@@ -16,7 +16,7 @@ export function Hero() {
 
   if (slides.length === 0) {
     return (
-      <section className="bg-foreground h-[480px] md:h-[620px] flex items-center justify-center text-background/60">
+      <section className="bg-muted aspect-[21/9] flex items-center justify-center text-muted-foreground">
         Загрузка баннеров…
       </section>
     );
@@ -25,13 +25,13 @@ export function Hero() {
   const s = slides[i] ?? slides[0];
 
   return (
-    <section className="relative bg-foreground overflow-hidden">
+    <section className="relative overflow-hidden">
       <div className="bg-secondary text-secondary-foreground">
         <div className="container-x py-3 text-center text-xs uppercase tracking-[0.3em] font-display">
           GARMIN
         </div>
       </div>
-      <div className="relative h-[480px] md:h-[620px]">
+      <div className="relative w-full aspect-[21/9]">
         {slides.map((sl, idx) => (
           <div
             key={sl.id}
@@ -42,17 +42,17 @@ export function Hero() {
             <img
               src={resolveImage(sl.image_path)}
               alt=""
-              className="absolute inset-0 w-full h-full object-contain"
+              className="absolute inset-0 w-full h-full object-cover object-center"
               fetchPriority={idx === 0 ? "high" : "auto"}
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-foreground/80 via-foreground/20 to-transparent pointer-events-none" />
+            <div className="absolute inset-0 bg-gradient-to-r from-foreground/60 via-foreground/10 to-transparent pointer-events-none" />
             <div className="container-x relative h-full flex items-center">
-              <div className="max-w-xl text-background z-10">
-                <h1 className="font-display text-5xl md:text-7xl font-bold leading-none">
+              <div className="max-w-md text-background z-10">
+                <h1 className="font-display text-2xl md:text-4xl font-bold leading-tight">
                   {sl.title}
                 </h1>
                 {sl.subtitle && (
-                  <p className="mt-5 text-lg md:text-xl text-background/85 max-w-md">
+                  <p className="mt-2 text-sm md:text-base text-background/85 max-w-sm">
                     {sl.subtitle}
                   </p>
                 )}
@@ -60,7 +60,7 @@ export function Hero() {
                   <Link
                     to="/product/$id"
                     params={{ id: sl.link_product_id }}
-                    className="mt-8 inline-flex items-center px-8 py-3.5 bg-background text-foreground font-medium uppercase tracking-wider text-sm hover:bg-accent hover:text-accent-foreground transition-colors"
+                    className="mt-4 inline-flex items-center px-5 py-2 bg-background text-foreground font-medium uppercase tracking-wider text-xs hover:bg-accent hover:text-accent-foreground transition-colors"
                   >
                     Узнать больше
                   </Link>
