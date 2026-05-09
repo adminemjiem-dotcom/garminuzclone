@@ -31,7 +31,7 @@ export function Hero() {
           GARMIN
         </div>
       </div>
-      <div className="relative w-full aspect-[21/9]">
+      <div className="relative w-full h-[420px] md:h-[560px]">
         {slides.map((sl, idx) => (
           <div
             key={sl.id}
@@ -41,8 +41,13 @@ export function Hero() {
           >
             <img
               src={resolveImage(sl.image_path)}
+              aria-hidden
+              className="absolute inset-0 w-full h-full object-cover scale-110 blur-2xl opacity-70"
+            />
+            <img
+              src={resolveImage(sl.image_path)}
               alt=""
-              className="absolute inset-0 w-full h-full object-cover object-center"
+              className="absolute inset-0 w-full h-full object-contain"
               fetchPriority={idx === 0 ? "high" : "auto"}
             />
             <div className="absolute inset-0 bg-gradient-to-r from-foreground/60 via-foreground/10 to-transparent pointer-events-none" />
