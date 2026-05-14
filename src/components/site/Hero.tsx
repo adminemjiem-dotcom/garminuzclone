@@ -7,6 +7,7 @@ import { fetchBanners, resolveImage } from "@/lib/products";
 export function Hero() {
   const { data: slides = [] } = useQuery({ queryKey: ["banners"], queryFn: fetchBanners });
   const [i, setI] = useState(0);
+  const [ratios, setRatios] = useState<Record<string, number>>({});
 
   useEffect(() => {
     if (slides.length < 2) return;
@@ -22,7 +23,8 @@ export function Hero() {
     );
   }
 
-  const s = slides[i] ?? slides[0];
+  const current = slides[i] ?? slides[0];
+  const currentRatio = ratios[current.id];
 
   return (
     <section className="relative overflow-hidden">
@@ -31,7 +33,14 @@ export function Hero() {
           GARMIN
         </div>
       </div>
-      <div className="relative w-full h-[420px] md:h-[560px]">
+      <div
+        className="relative w-full bg-muted"
+        style={
+          currentRatio
+            ? { aspectRatio: String(currentRatio) }
+            : { aspectRatio: "21 / 9" }
+        }
+      >
         {slides.map((sl, idx) => (
           <div
             key={sl.id}
@@ -41,15 +50,19 @@ export function Hero() {
           >
             <img
               src={resolveImage(sl.image_path)}
-              aria-hidden
-              className="absolute inset-0 w-full h-full object-cover scale-110 blur-2xl opacity-70"
-            />
-            <img
-              src={resolveImage(sl.image_path)}
               alt=""
-              className="absolute inset-0 w-full h-full object-contain"
+              className="absolute inset-0 w-full h-full object-cover"
               fetchPriority={idx === 0 ? "high" : "auto"}
+              onLoad={(e) => {
+                const img = e.currentTarget;
+                if (img.naturalWidth && img.naturalHeight) {
+                  setRatios((r) =>
+                    r[sl.id] ? r : { ...r, [sl.id]: img.naturalWidth / img.naturalHeight }
+                  );
+                }
+              }}
             />
+
             <div className="absolute inset-0 bg-gradient-to-r from-foreground/60 via-foreground/10 to-transparent pointer-events-none" />
             <div className="container-x relative h-full flex items-center">
               <div className="max-w-md text-background z-10">
