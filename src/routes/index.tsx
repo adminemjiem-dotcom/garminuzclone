@@ -3,7 +3,9 @@ import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { Hero } from "@/components/site/Hero";
 import { ProductGrid } from "@/components/site/ProductGrid";
-import { Categories } from "@/components/site/Categories";
+import { CategoryBands } from "@/components/site/CategoryBands";
+import { Articles } from "@/components/site/Articles";
+import { AboutSeo } from "@/components/site/AboutSeo";
 import { FeatureBand } from "@/components/site/FeatureBand";
 
 export const Route = createFileRoute("/")({
@@ -26,7 +28,9 @@ function Index() {
         <Hero />
         <FeatureBand />
         <ProductGrid featuredOnly title="Новые поступления" limit={8} />
-        <Categories />
+        <CategoryBands />
+        <Articles />
+        <AboutSeo />
       </main>
       <Footer />
     </div>
